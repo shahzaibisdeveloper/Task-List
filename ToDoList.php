@@ -83,7 +83,7 @@ endif;*/
 
 if (isset($_GET['delete']) && isset($_GET['id'])) {
     $id = intval($_GET['id']);
-    $sql = "DELETE FROM task where id=?";
+    $sql = "DELETE FROM task where id = '$id'";
     $result = mysqli_query($conn, $sql) or die("Query Failed!");
     header("location: ToDoList.php");
     exit;
@@ -125,6 +125,10 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
     <meta charset="utf-8">
     <title>Todo List</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Link to your external CSS file -->
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -175,7 +179,7 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
             </form>
         </div>
     </div>
-    <table border="2px" cellpadding="5px" cellspacing="5px" align='center'>
+    <table align="center" >
         <thead>
             <tr>
                 <th>ID</th>
@@ -186,15 +190,15 @@ if (isset($_GET['delete']) && isset($_GET['id'])) {
         </thead>
         <tbody>
             <?php if (mysqli_num_rows($all_results) > 0) {
-
                 while ($data = mysqli_fetch_assoc($all_results)) { ?>
                     <tr>
-                        <td> <?php echo  htmlspecialchars($data['id']) ?></td>
-                        <td> <?php echo  htmlspecialchars($data['task_name']) ?></td>
-                        <td> <?php $status_class = strtolower($data['status']); // e.g., 'done', 'ongoing', 'undone'
-                                echo "<span class='status-cell status-{$status_class}'><span class='status-dot'></span>" . htmlspecialchars($data['status']) . "</span>"; ?> </td>
-                        <td> <a href="ToDoList.php?delete=true&id=<?php echo $data['id'] ?>">Delete</a>
+                        <td data-label="ID"> <?php echo  htmlspecialchars($data['id']) ?></td>
+                        <td data-label="Task"> <?php echo  htmlspecialchars($data['task_name']) ?></td>
+                        <td data-label="Status"> <?php $status_class = strtolower($data['status']);
+                                                    echo "<span class='status-cell status-{$status_class}'><span class='status-dot'></span>" . htmlspecialchars($data['status']) . "</span>"; ?> </td>
+                        <td data-label="Actions">
                             <a href="ToDoList.php?edit=true&id=<?php echo $data['id'] ?>">Edit</a>
+                            <a href="ToDoList.php?delete=true&id=<?php echo $data['id'] ?>" class="btn-link danger">Delete</a>
                         </td>
                 <?php }
             } else {
